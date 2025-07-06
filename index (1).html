@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Analisis Sentimen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        code { word-wrap: break-word; white-space: pre-wrap; }
+    </style>
+</head>
+<body class="p-4 sm:p-6 md:p-8">
+    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-6 sm:p-8">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Dashboard Analisis Sentimen</h1>
+            <p class="text-gray-500 mt-1">Implementasi Final dengan Backend Python</p>
+        </div>
+        <div id="input-section">
+            <textarea id="user-input" class="w-full h-32 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Contoh: aplikasi ini error terus, payah!"></textarea>
+            <button id="analyze-button" class="mt-4 w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">Analisis Sekarang!</button>
+        </div>
+        <div id="results-section" class="hidden mt-8">
+            <div id="loading" class="hidden flex justify-center p-8"><div class="loader"></div></div>
+            <div id="error-container" class="hidden p-4 rounded-lg bg-red-100 text-red-800"></div>
+            <div id="success-container" class="hidden space-y-6">
+                <div>
+                    <p class="text-lg font-semibold text-gray-600">🏁 Prediksi Sentimen Akhir:</p>
+                    <div id="final-prediction" class="p-6 rounded-lg text-center"></div>
+                </div>
+                <details>
+                    <summary class="font-semibold text-gray-700 cursor-pointer hover:text-blue-600">🔍 Lihat Detail Proses</summary>
+                    <div id="details-content" class="mt-4 p-4 bg-gray-50 rounded-lg space-y-4 text-sm"></div>
+                </details>
+            </div>
+        </div>
+    </div>
+    <script>
+        const analyzeButton = document.getElementById('analyze-button');
+        const userInput = document.getElementById('user-input');
+        const resultsSection = document.getElementById('results-section');
+        const loadingSpinner = document.getElementById('loading');
+        const errorContainer = document.getElementById('error-container');
+        const successContainer = document.getElementById('success-container');
+        const finalPredictionDiv = document.getElementById('final-prediction');
+        const detailsContent = document.getElementById('details-content');
+        analyzeButton.addEventListener('click', async () => {
+            const inputText = userInput.value.trim();
+            if (!inputText) { alert("Harap masukkan teks."); return; }
+            resultsSection.classList.remove('hidden');
+            loadingSpinner.classList.remove('hidden');
+            errorContainer.classList.add('hidden');
+            successContainer.classList.add('hidden');
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: inputText })
+                });
+                const hasil = await response.json();
+                if (!response.ok) throw new Error(hasil.error || 'Terjadi kesalahan tidak diketahui');
+                loadingSpinner.classList.add('hidden');
+                successContainer.classList.remove('hidden');
+                const prediksi = hasil.final_prediction;
+                finalPredictionDiv.innerHTML = `<h2 class="text-4xl font-bold">${prediksi.charAt(0).toUpperCase() + prediksi.slice(1)}</h2>`;
+                finalPredictionDiv.className = `p-6 rounded-lg text-center ${prediksi.toLowerCase() === 'positif' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`;
+                detailsContent.innerHTML = `
+                    <div><p class="font-semibold text-gray-800">Hasil Translasi (EN):</p><code class="block bg-gray-200 p-2 rounded mt-1">${hasil.translated_en}</code></div>
+                    <div><p class="font-semibold text-gray-800">Skor AFINN:</p><pre class="block bg-gray-200 p-2 rounded mt-1">${hasil.afinn_score}</pre></div>
+                    <div><p class="font-semibold text-gray-800">Teks Final untuk Model:</p><code class="block bg-gray-200 p-2 rounded mt-1">${hasil.text_for_model}</code></div>
+                `;
+            } catch (error) {
+                loadingSpinner.classList.add('hidden');
+                errorContainer.classList.remove('hidden');
+                errorContainer.innerText = `Gagal: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
