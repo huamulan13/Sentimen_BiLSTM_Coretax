@@ -30,7 +30,6 @@ except LookupError:
 def load_resources():
     """Fungsi untuk me-load model, vectorizer, dan encoder."""
     try:
-        # Pastikan nama file ini SAMA PERSIS dengan yang di GitHub
         model = load_model('bilstm_model_from_tfidf.h5')
         with open('tfidf_vectorizer_for_bilstm.pkl', 'rb') as f:
             vectorizer = pickle.load(f)
@@ -38,7 +37,8 @@ def load_resources():
             encoder = pickle.load(f)
         return model, vectorizer, encoder
     except FileNotFoundError:
-        # ... dan seterusnya
+        st.error("Gagal memuat file model/vectorizer/encoder. Pastikan file tersebut ada.")
+        return None, None, None
 
 def preprocess_text(text):
     """Fungsi untuk membersihkan dan memproses teks input."""
