@@ -91,53 +91,48 @@ st.write("Aplikasi ini memprediksi sentimen (positif/negatif) dari ulasan atau t
 # Area input dari pengguna
 user_input = st.text_area("Masukkan teks di sini:", "Contoh: Pelayanannya cepat dan memuaskan!")
 if st.button("Analisis Sekarang"):
-    if not model or not vectorizer or not encoder:
-        st.warning("Aplikasi belum siap karena gagal memuat resource.")
-    elif user_input:
-        with st.spinner("Sedang memproses..."):
-            processed_text = preprocess_text(user_input)
-            
-            # --- TAMBAHKAN LOGIKA AFINN DI SINI ---
-            afinn_analyzer = Afinn()
-            afinn_score = afinn_analyzer.score(processed_text)
-            # ------------------------------------
-            
-            # ... sisa logika prediksi Anda (TF-IDF, reshape, predict) ...
-            
-        st.subheader("Hasil Prediksi:")
-        # ... logika st.success/st.error ...
-
-        with st.expander("Lihat Detail Proses"):
-            st.write(f"**Teks Setelah Preprocessing:** `{processed_text}`")
-            st.write(f"**Probabilitas Prediksi:** `{prediction_probs[0]}`")
-            # --- TAMBAHKAN BARIS INI UNTUK MENAMPILKAN SKOR ---
-            st.write(f"**Skor AFINN:** `{afinn_score}`")
-            # ----------------------------------------------------
-    else:
-        st.warning("Harap masukkan teks untuk dianalisis.")
-# Tombol untuk memulai analisis
-if st.button("Analisis Sekarang"):
+    # Cek apakah resource sudah siap dan ada input dari pengguna
     if not model or not vectorizer or not encoder:
         st.warning("Aplikasi belum siap karena gagal memuat resource.")
     elif user_input:
         # Tampilkan spinner saat proses berjalan
         with st.spinner("Sedang memproses..."):
+            
             # 1. Preprocess teks input
             processed_text = preprocess_text(user_input)
 
-            # 2. Transformasi TF-IDF
+            # 2. Hitung skor AFINN
+            afinn_analyzer = Afinn()
+            afinn_score = afinn_analyzer.score(processed_text)
+
+            # 3. Transformasi TF-IDF
             tfidf_vector = vectorizer.transform([processed_text])
             
-            # 3. Reshape vektor agar cocok untuk input LSTM
+            # 4. Reshape vektor agar cocok untuk input LSTM
             reshaped_vector = np.expand_dims(tfidf_vector.toarray(), axis=1)
 
-            # 4. Prediksi menggunakan model
+            # 5. Prediksi menggunakan model
             prediction_probs = model.predict(reshaped_vector)
             predicted_index = np.argmax(prediction_probs, axis=1)[0]
             
-            # 5. Decode label
+            # 6. Decode label
             final_prediction = encoder.inverse_transform([predicted_index])[0]
 
+        # Tampilkan hasil prediksi utama
+        st.subheader("Hasil Prediksi:")
+        if final_prediction.lower() == 'positif':
+            st.success(f"Sentimen: **Positif** 👍")
+        else:
+            st.error(f"Sentimen: **Negatif** 👎")
+
+        # Tampilkan semua detail proses di dalam expander
+        with st.expander("Lihat Detail Proses"):
+            st.write(f"**Teks Setelah Preprocessing:** `{processed_text}`")
+            st.write(f"**Skor AFINN:** `{afinn_score}`")
+            st.write(f"**Probabilitas Prediksi:** `{prediction_probs[0]}`")
+
+    else:
+        st.warning("Harap masukkan teks untuk dianalisis.")
         # Tampilkan hasil prediksi
         st.subheader("Hasil Prediksi:")
         if final_prediction.lower() == 'positif':
