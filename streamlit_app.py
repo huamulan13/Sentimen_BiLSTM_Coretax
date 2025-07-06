@@ -4,6 +4,7 @@ import numpy as np
 import re
 import pickle
 from tensorflow.keras.models import load_model
+from afinn import Afinn
 
 # Fungsi-fungsi preprocessing yang sama persis dari skrip pelatihan
 # (Kita letakkan di sini agar skripnya mandiri)
@@ -89,7 +90,31 @@ st.write("Aplikasi ini memprediksi sentimen (positif/negatif) dari ulasan atau t
 
 # Area input dari pengguna
 user_input = st.text_area("Masukkan teks di sini:", "Contoh: Pelayanannya cepat dan memuaskan!")
+if st.button("Analisis Sekarang"):
+    if not model or not vectorizer or not encoder:
+        st.warning("Aplikasi belum siap karena gagal memuat resource.")
+    elif user_input:
+        with st.spinner("Sedang memproses..."):
+            processed_text = preprocess_text(user_input)
+            
+            # --- TAMBAHKAN LOGIKA AFINN DI SINI ---
+            afinn_analyzer = Afinn()
+            afinn_score = afinn_analyzer.score(processed_text)
+            # ------------------------------------
+            
+            # ... sisa logika prediksi Anda (TF-IDF, reshape, predict) ...
+            
+        st.subheader("Hasil Prediksi:")
+        # ... logika st.success/st.error ...
 
+        with st.expander("Lihat Detail Proses"):
+            st.write(f"**Teks Setelah Preprocessing:** `{processed_text}`")
+            st.write(f"**Probabilitas Prediksi:** `{prediction_probs[0]}`")
+            # --- TAMBAHKAN BARIS INI UNTUK MENAMPILKAN SKOR ---
+            st.write(f"**Skor AFINN:** `{afinn_score}`")
+            # ----------------------------------------------------
+    else:
+        st.warning("Harap masukkan teks untuk dianalisis.")
 # Tombol untuk memulai analisis
 if st.button("Analisis Sekarang"):
     if not model or not vectorizer or not encoder:
