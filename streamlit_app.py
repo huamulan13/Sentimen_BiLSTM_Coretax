@@ -6,7 +6,7 @@ from tensorflow.keras.models import load_model
 
 # Fungsi-fungsi preprocessing yang sama persis dari skrip pelatihan
 # (Kita letakkan di sini agar skripnya mandiri)
-from deep_translator import GoogleTranslator
+# from deep_translator import GoogleTranslator
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
@@ -48,9 +48,9 @@ def preprocess_text(text):
         return ""
     try:
         # Untuk performa lebih cepat, translasi bisa dilewati jika input sudah bahasa inggris
-        translated_text = GoogleTranslator(source='id', target='en').translate(text)
-    except Exception:
-        translated_text = text # Fallback
+#        translated_text = GoogleTranslator(source='id', target='en').translate(text)
+#    except Exception:
+#       translated_text = text # Fallback
     
     tokens = word_tokenize(translated_text.lower())
     stop_words_en = set(stopwords.words('english'))
