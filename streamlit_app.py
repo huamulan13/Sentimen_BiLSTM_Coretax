@@ -1,4 +1,5 @@
 import streamlit as st
+import nltk
 import numpy as np
 import re
 import pickle
@@ -11,6 +12,22 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 import nltk
+
+@st.cache_resource
+def download_nltk_resources():
+    try:
+        # Memeriksa apakah paket sudah ada
+        nltk.data.find('tokenizers/punkt')
+        nltk.data.find('corpora/stopwords')
+        nltk.data.find('corpora/wordnet')
+        nltk.data.find('taggers/averaged_perceptron_tagger')
+    except LookupError:
+        # Jika belum ada, unduh paketnya
+        nltk.download('punkt')
+        nltk.download('stopwords')
+        nltk.download('wordnet')
+        nltk.download('averaged_perceptron_tagger')
+    print("✅ Resource NLTK siap.")
 
 # Pastikan resource NLTK sudah ada
 try:
