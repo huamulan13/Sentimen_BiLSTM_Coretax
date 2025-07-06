@@ -1,6 +1,7 @@
+# python_version: 3.11
 streamlit
 tensorflow-cpu
 numpy
 scikit-learn
-#deep-translator
+deep-translator
 nltk
