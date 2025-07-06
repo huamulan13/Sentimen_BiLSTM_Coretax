@@ -6,7 +6,7 @@ from tensorflow.keras.models import load_model
 
 # Fungsi-fungsi preprocessing yang sama persis dari skrip pelatihan
 # (Kita letakkan di sini agar skripnya mandiri)
- from deep_translator import GoogleTranslator
+from deep_translator import GoogleTranslator
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
