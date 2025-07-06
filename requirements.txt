@@ -2,5 +2,5 @@ streamlit
 tensorflow-cpu
 numpy
 scikit-learn
-googletrans==3.1.0a0
+deep-translator
 nltk
