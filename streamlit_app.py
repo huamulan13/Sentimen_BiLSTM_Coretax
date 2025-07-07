@@ -134,7 +134,7 @@ if st.button("Analisis Sekarang"):
         with st.expander("Lihat Detail Proses"):
             st.write(f"**Teks Setelah Preprocessing:** `{processed_text}`")
             st.write(f"**Skor AFINN:** `{afinn_score}`")
-            st.write(f"**Probabilitas Prediksi (Negatif, Positif):** `{prediction_probs[0]}`")
+            #st.write(f"**Probabilitas Prediksi (Negatif, Positif):** `{prediction_probs[0]}`")
 
     else:
         st.warning("Harap masukkan teks untuk dianalisis.")
