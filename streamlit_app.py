@@ -107,7 +107,7 @@ st.markdown("""
 
 # 3. Tampilkan judul dan antarmuka utama
 st.title("Dashboard Analisis Sentimen")
-st.write("Implementasi Final dengan Backend Python")
+st.write("Deploy Web Sederhana Bi-LSTM dengan AFINN")
 
 user_input = st.text_area("Masukkan teks di sini:", "Contoh: aplikasi ini error terus, payah!", label_visibility="collapsed", placeholder="Contoh: aplikasi ini error terus, payah!")
 
