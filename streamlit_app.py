@@ -9,14 +9,13 @@ from deep_translator import GoogleTranslator
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
-nltk.download('punkt_tab')
 
 # --- FUNGSI-FUNGSI HELPER (Tidak ada perubahan) ---
 
 @st.cache_resource
 def download_nltk_resources():
     resources = {
-        "tokenizers/punkt": "punkt",
+        "tokenizers/punkt": "punkt" "'punkt_tab",
         "corpora/stopwords": "stopwords",
         "corpora/wordnet": "wordnet",
         "taggers/averaged_perceptron_tagger": "averaged_perceptron_tagger",
