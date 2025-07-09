@@ -9,6 +9,7 @@ from deep_translator import GoogleTranslator
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
+nltk.download('punkt_tab')
 
 # --- FUNGSI-FUNGSI HELPER (Tidak ada perubahan) ---
 
