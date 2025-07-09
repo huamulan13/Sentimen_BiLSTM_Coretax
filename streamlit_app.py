@@ -19,7 +19,7 @@ def download_nltk_resources():
     Hanya dijalankan sekali saat aplikasi pertama kali dimulai.
     """
     resources = {
-        "tokenizers/punkt": "punkt",
+        "tokenizers/punkt": "punkt" "punkt_tab",
         "corpora/stopwords": "stopwords",
         "corpora/wordnet": "wordnet",
         "taggers/averaged_perceptron_tagger": "averaged_perceptron_tagger",
